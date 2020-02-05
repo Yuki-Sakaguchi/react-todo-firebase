@@ -7,3 +7,19 @@ https://qiita.com/mooriii/items/758c469dc176d542fdd2#firestore%E3%82%92%E4%BD%BF
 
 ## DEMO
 https://todolist-402ab.firebaseapp.com
+
+## 勉強するもの
+- React
+  - useEffectの第２引数
+- Firebase-cli
+  - firebase login
+  - firebase init
+  - firebase deploy
+- Firebase
+  - firebase.firestore
+  - db.collection
+    - get()
+    - update()
+
+## やってないけどやりたいこと
+- gmailアカウントログイン
