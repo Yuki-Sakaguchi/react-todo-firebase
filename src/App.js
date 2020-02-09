@@ -106,7 +106,7 @@ const App = () => {
 
   return (
     <Container maxWidth="xl">
-      <Typography variant="h2" component="h1">TODO</Typography>
+      <Typography variant="h2" component="h1">TODO!!</Typography>
       <form onSubmit={(e) => addTodo(e)}>
         <Grid container spacing={3}>
           <Grid item xs={9}>
