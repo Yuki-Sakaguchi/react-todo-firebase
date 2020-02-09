@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Todo from './pages/Todo'
 import styled from 'styled-components'
-import { Input, Button, Container, Typography, Grid } from '@material-ui/core';
+import { Input, Button, Container, Typography, Grid, Avatar } from '@material-ui/core';
 import firebase from 'firebase'
 import 'firebase/firestore'
 
@@ -23,6 +23,7 @@ const Loading = styled.div`
 `;
 
 const App = () => {
+  const [user, setUser] = useState(null)
   const [input, setInput] = useState('')
   const [todoList, setTodoList] = useState([])
   const [finishedList, setFinishedList] = useState([])
@@ -33,39 +34,59 @@ const App = () => {
   const db = firebase.firestore()
 
   useEffect(() => {
-    (async () => {
-      const resTodo = await db.collection('todolist').doc('todo').get()
-      if (resTodo.data()) setTodoList(resTodo.data().tasks)
-      
-      const resFinishedTodo = await db.collection('todolist').doc('finishedTodo').get()
-      if (resFinishedTodo.data()) setFinishedList(resFinishedTodo.data().tasks)
-
-      setIsLoading(false)
-    })()
-  }, [db])
+    firebase.auth().onAuthStateChanged(async user => {
+      // 対象のコレクションがなければ作る
+      if (user != null) {
+        const collection = await db.collection('todolist').doc(user.uid).get();
+        if (!collection.exists) {
+          db.collection('todolist').doc(user.uid).set({
+            todo: {
+              tasks: []
+            },
+            finishedTodo: {
+              tasks: []
+            },
+          })
+        }
+      }
+      setUser(user)
+    })
+  }, [db, user])
 
   useEffect(() => {
+    if (user == null) return
+    (async () => {
+      const resTodo = await db.collection('todolist').doc(user.uid).get()
+      if (resTodo.data().todo.tasks) setTodoList(resTodo.data().todo.tasks)
+      if (resTodo.data().finishedTodo.tasks) setFinishedList(resTodo.data().finishedTodo.tasks)
+      setIsLoading(false)
+    })()
+  }, [db, user])
+
+  useEffect(() => {
+    if (user == null) return
     if (isChangedTodo) {
       (async () => {
         setIsLoading(true)
-        const docRef = await db.collection('todolist').doc('todo')
-        docRef.update({ tasks: todoList })
+        const docRef = await db.collection('todolist').doc(user.uid)
+        docRef.update({ todo: { tasks: todoList }})
         setIsLoading(false)
       })()
     }
-  }, [todoList, isChangedTodo, db])
+  }, [todoList, isChangedTodo, db, user])
 
   useEffect(() => {
+    if (user == null) return
     if (isChangedFinishedTodo) {
       (async () => {
         setIsLoading(true)
-        const docRef = await db.collection('todolist').doc('finishedTodo')
-        docRef.update({ tasks: finishedList })
+        const docRef = await db.collection('todolist').doc(user.uid)
+        docRef.update({ finishedTodo: { tasks: finishedList }})
         setIsLoading(false)
       })()
     }
     setIsChangedFinishedTodo(false)
-  }, [db, finishedList, isChangedFinishedTodo])
+  }, [db, finishedList, isChangedFinishedTodo, user])
 
   const addTodo = async (e) => {
     e.preventDefault();
@@ -104,9 +125,25 @@ const App = () => {
     setInput(e.target.value)
   }
 
+  const login = () => {
+    const provider = new firebase.auth.GoogleAuthProvider()
+    firebase.auth().signInWithRedirect(provider)
+  }
+
+  const logout = () => {
+    firebase.auth().signOut()
+  }
+
+  if (user == null) {
+    return <button onClick={() => login()}>Gooele Login</button>
+  }
+
   return (
     <Container maxWidth="xl">
       <Typography variant="h2" component="h1">TODO!!</Typography>
+      <Avatar alt={user.displayName} src={user.photoURL} />
+      <p>{user.displayName}さん</p>
+      <button onClick={() => logout()}>Logout</button>
       <form onSubmit={(e) => addTodo(e)}>
         <Grid container spacing={3}>
           <Grid item xs={9}>
@@ -117,19 +154,20 @@ const App = () => {
           </Grid>
         </Grid>
       </form>
-      {isLoading
-        ? <Loading>loading</Loading>
-        : <TodoContainer>
-            <StyledSection>
-              <Typography variant="h3" component="h2">TASK</Typography>
-              <Todo todoList={todoList} deleteTodo={deleteTodo} changeTodoStatus={finishTodo} type="todo"/>
-            </StyledSection>
-            <StyledSection>
-              <Typography variant="h3" component="h2">COMPLETE</Typography>
-              <Todo todoList={finishedList} deleteTodo={deleteFinishTodo} changeTodoStatus={reopenTodo} type="done"/>
-            </StyledSection>
-          </TodoContainer>
-      }
+      {isLoading ? (
+        <Loading>loading</Loading>
+      ) : (
+        <TodoContainer>
+          <StyledSection>
+            <Typography variant="h3" component="h2">TASK</Typography>
+            <Todo todoList={todoList} deleteTodo={deleteTodo} changeTodoStatus={finishTodo} type="todo"/>
+          </StyledSection>
+          <StyledSection>
+            <Typography variant="h3" component="h2">COMPLETE</Typography>
+            <Todo todoList={finishedList} deleteTodo={deleteFinishTodo} changeTodoStatus={reopenTodo} type="done"/>
+          </StyledSection>
+        </TodoContainer>
+      )}
     </Container>
   )
 }

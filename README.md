@@ -8,6 +8,7 @@ npm start
 
 ```
 npm run build
+(firebase serve)でローカルで試せる
 firebase deploy
 ```
 
@@ -34,7 +35,7 @@ https://todolist-402ab.firebaseapp.com
   - [x] update()
 
 # やってないけどやりたいこと
-- [ ] gmailアカウントログイン
+- [x] gmailアカウントログイン
 
 ---
 
@@ -89,4 +90,16 @@ https://firebase.google.com/docs/cli?hl=ja
 
 ## update()
 - 他の子ノードを上書きすることなく、特定の複数の子を同時に書き込む
-- 
+
+
+# gmailアカウントログイン
+- こんな感じでプロジェクト上で使いたいログイン方法を許可する
+  - https://blog.katsubemakito.net/firebase/firebase-authentication-google-web1
+- こんな感じでログイン処理を挟む
+  - https://qiita.com/HorieH/items/8b4b1c4807e1eb6fcb0a
+- collectionとdocのアクセス方法はここら辺を見た
+  - https://qiita.com/subaru44k/items/a88e638333b8d5cc29f2
+- ユーザーごとにデータを切り分けるようにコレクションをuser.uidにしてみた
+  - もっと良い切り分け方がありそう
+  - `doc.update()`がちょっと面倒だけど、なんかもっといい方法がありそう
+  - GoogleLoginした後にログインが完了する間のローディングをいれたい
