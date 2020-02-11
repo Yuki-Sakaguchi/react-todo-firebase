@@ -1,8 +1,8 @@
-import { LOGIN, LOGOUT } from '../actions/Auth'
-
 /**
  * 認証
  */
+import { LOGIN, LOGOUT } from '../actions/Auth'
+
 const initialState = {
   user: null
 }

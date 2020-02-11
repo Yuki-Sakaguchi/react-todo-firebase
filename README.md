@@ -1,6 +1,9 @@
 # React + FirebaseでTODOを作る
 https://qiita.com/mooriii/items/758c469dc176d542fdd2#firestore%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%83%87%E3%83%BC%E3%82%BF%E3%82%92%E6%B0%B8%E7%B6%9A%E5%8C%96%E3%81%97%E3%81%A6%E3%81%BF%E3%82%8B
 
+# DEMO
+https://todolist-402ab.firebaseapp.com
+
 # 実装
 ```
 npm start
@@ -15,9 +18,6 @@ firebase deploy
 # style
 - Material UI
 - styled-components
-
-# DEMO
-https://todolist-402ab.firebaseapp.com
 
 # 勉強するもの
 ## React
@@ -120,3 +120,9 @@ https://firebase.google.com/docs/cli?hl=ja
   - Reduxが管理するstateとReactで定義するviewをまとめたcomponent
   - `react-redux`の`connect`を使う
   - containerによってまとめられたcomponentを他の場所呼び出して、アプリを設計していく
+
+
+---
+
+# React-router
+- ルーティングをいれてSPAにしてみた

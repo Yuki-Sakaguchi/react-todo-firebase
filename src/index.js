@@ -16,6 +16,7 @@ import theme from "./theme";
 import firebase from 'firebase'
 import 'firebase/auth'
 import firebaseConfig from './firebase/config'
+
 const store = createStore(Reducer)
 firebase.initializeApp(firebaseConfig);
 

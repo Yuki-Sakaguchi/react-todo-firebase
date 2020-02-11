@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { loginAction, logoutAction } from '../actions/Auth'
 import App from '../components/App'
 
-
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user
