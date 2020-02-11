@@ -1,6 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
+import AppContainer from './containers/AppContainer'
+
+// Redux
+import { createStore } from 'redux'
+import Reducer from './reducers'
+import { Provider } from 'react-redux'
 
 // Material-uiとstyled-componentsのテーマを揃える
 import { ThemeProvider as MaterialThemeProvider } from "@material-ui/styles";
@@ -10,14 +15,17 @@ import theme from "./theme";
 // Firebaseの設定
 import firebase from 'firebase'
 import 'firebase/auth'
-import firebaseConfig from './config'
+import firebaseConfig from './firebase/config'
+const store = createStore(Reducer)
 firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render(
-  <MaterialThemeProvider theme={theme}>
-    <StyledThemeProvider theme={theme}>
-      <App />
-    </StyledThemeProvider>
-  </MaterialThemeProvider>,
+  <Provider store={store}>
+    <MaterialThemeProvider theme={theme}>
+      <StyledThemeProvider theme={theme}>
+        <AppContainer />
+      </StyledThemeProvider>
+    </MaterialThemeProvider>
+  </Provider>,
   document.getElementById('root')
 )

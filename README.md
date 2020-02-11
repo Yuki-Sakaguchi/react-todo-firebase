@@ -103,3 +103,20 @@ https://firebase.google.com/docs/cli?hl=ja
   - もっと良い切り分け方がありそう
   - `doc.update()`がちょっと面倒だけど、なんかもっといい方法がありそう
   - GoogleLoginした後にログインが完了する間のローディングをいれたい
+
+---
+
+# Redux
+- ログインしたユーザー情報をReduxで管理する
+- https://qiita.com/Takumi_Kaibara/items/9249a4ba71302e06cc16
+
+## ディレクトリ構造
+- actions
+- reducers
+  - Reduxに管理してもらうstateを定義する
+  - Actionの内容に合わせてstateを変更するreducerを設定する
+  - index.jsは全てのReducerをまとめるために使う
+- containers
+  - Reduxが管理するstateとReactで定義するviewをまとめたcomponent
+  - `react-redux`の`connect`を使う
+  - containerによってまとめられたcomponentを他の場所呼び出して、アプリを設計していく
