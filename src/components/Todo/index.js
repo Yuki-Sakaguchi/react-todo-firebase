@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Todo from './todolist'
 
+import uuid from 'uuid/v4'
+
 import firebase from 'firebase'
 import 'firebase/firestore'
 
@@ -86,7 +88,10 @@ const TodoPage = (props) => {
     e.preventDefault();
     if (!!input) {
       setIsChangedTodo(true)
-      setTodoList([...todoList, input])
+      setTodoList([...todoList, {
+        title: input,
+        id: uuid(),
+      }])
       setInput('')
     }
   }
@@ -113,6 +118,16 @@ const TodoPage = (props) => {
     setIsChangedFinishedTodo(true)
     deleteFinishTodo(index)
     setTodoList([...todoList, finishedList.find((todo, i) => i === index)])
+  }
+
+  const updateTodo = (todoList, type) => {
+    setIsChangedTodo(true)
+    setIsChangedFinishedTodo(true)
+    if (type === 'todo') {
+      setTodoList([...todoList])
+    } else if (type === 'done') {
+      setFinishedList([...todoList])
+    }
   }
   
   const changeInput = (e) => {
@@ -144,11 +159,11 @@ const TodoPage = (props) => {
               <TodoContainer>
                 <StyledSection>
                   <Typography variant="h3" component="h2">TASK</Typography>
-                  <Todo todoList={todoList} deleteTodo={deleteTodo} changeTodoStatus={finishTodo} type="todo"/>
+                  <Todo todoList={todoList} deleteTodo={deleteTodo} changeTodoStatus={finishTodo} type="todo" updateTodo={updateTodo}/>
                 </StyledSection>
                 <StyledSection>
                   <Typography variant="h3" component="h2">COMPLETE</Typography>
-                  <Todo todoList={finishedList} deleteTodo={deleteFinishTodo} changeTodoStatus={reopenTodo} type="done"/>
+                  <Todo todoList={finishedList} deleteTodo={deleteFinishTodo} changeTodoStatus={reopenTodo} type="done" updateTodo={updateTodo}/>
                 </StyledSection>
               </TodoContainer>
             )}
